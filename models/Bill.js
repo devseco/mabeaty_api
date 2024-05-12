@@ -52,8 +52,8 @@ class Bill{
      }
     static async addSales(items, billId) {
         return new Promise((resolve, reject) => {
-            const query = 'INSERT INTO sales (title, image, bill, count, item_id, price_item) VALUES ?';
-            const values = items.map(item => [item.title, item.image, billId, item.count, item.id, item.price]);
+            const query = 'INSERT INTO sales (title, image, bill, count, item_id, price_item , price_user ) VALUES ?';
+            const values = items.map(item => [item.title, item.image, billId, item.count, item.id, item.price , item.price_user]);
             mysql.query(query, [values], (error, results, fields) => {
                 if (error) {
                     console.error('Error inserting sales items:', error);
@@ -66,9 +66,9 @@ class Bill{
         });
     }
     
-    static async addBill(name, phone, city, address, price, delivery, items , user_id ,customer_name , customer_total ,customer_nearpoint ) {
+    static async addBill(name, phone, city, address, price, delivery, items , user_id ,customer_name , customer_total ,customer_nearpoint  , profit) {
         return new Promise((resolve, reject) => {
-            mysql.query('INSERT INTO bills (name, phone, city, address, price, delivery, status , user_id ,customer_name , customer_total , customer_nearpoint) VALUES (?, ?, ?, ?, ?, ?, 0 , ? , ? , ? ,?)', [name, phone, city, address, price, delivery , user_id , customer_name , customer_total , customer_nearpoint], (error, result) => {
+            mysql.query('INSERT INTO bills (name, phone, city, address, price, delivery, status , user_id ,customer_name , customer_total , customer_nearpoint , profit) VALUES (?, ?, ?, ?, ?, ?, 0 , ? , ? , ? ,? , ?)', [name, phone, city, address, price, delivery , user_id , customer_name , customer_total , customer_nearpoint , profit], (error, result) => {
                 if (error) {
                     console.error("Error executing MySQL query:", error);
                     reject(error);
