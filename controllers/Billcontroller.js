@@ -3,8 +3,8 @@ const Bill = require('../models/Bill');
 class BillController {
     static async addBill(req, res, next) {
         try {
-            const { name, phone, city, address, price, delivery, items , user_id, customer_name ,customer_total , customer_nearpoint , profit} = req.body;
-            const result = await Bill.addBill(name, phone, city, address, price, delivery, items,user_id,customer_name, customer_total , customer_nearpoint , profit);
+            const { name, phone, city, address, price, delivery, items , user_id, customer_name ,customer_total , customer_nearpoint , profit , note} = req.body;
+            const result = await Bill.addBill(name, phone, city, address, price, delivery, items,user_id,customer_name, customer_total , customer_nearpoint , profit , note);
             res.status(200).send('Bill added successfully');
         } catch (error) {
             console.error('Error adding bill:', error);

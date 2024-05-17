@@ -31,6 +31,44 @@ class UserModel{
             });
         })
     }
+    static async getUserInfo(id) {
+        return new Promise((resolve, reject) => {
+            // استعلام لجلب معلومات المستخدم من جدول users
+            const userInfoQuery = `
+                SELECT name,phone,email,city , address,active
+                FROM users
+                WHERE id = ?
+            `;
+    
+            // استعلام لحساب مجموع الحالات من جدول bills
+            const summaryQuery = `
+            SELECT
+            COALESCE((SELECT SUM(profit) FROM bills WHERE user_id = ? AND status = 4 AND pay = 0), 0) AS total_loss,
+            COALESCE((SELECT SUM(profit) FROM bills WHERE user_id = ? AND status = 4 AND pay = 1), 0) AS total_received_profit,
+            COALESCE((SELECT SUM(profit) FROM bills WHERE user_id = ? AND status = 5 AND pay = 0), 0) AS total_returned_orders,
+            COALESCE((SELECT SUM(profit) FROM bills WHERE user_id = ? AND status NOT IN (4, 5) AND pay = 0), 0) AS total_expected_profit`;
+    
+            // تنفيذ استعلام معلومات المستخدم
+            mysql.query(userInfoQuery, [id], (error, userInfoResult) => {
+                if (error) {
+                    return reject(error);
+                }
+                // تنفيذ استعلام مجموع الحالات
+                mysql.query(summaryQuery, [id, id, id, id], (summaryError, summaryResult) => {
+                    if (summaryError) {
+                        return reject(summaryError);
+                    }
+                    resolve({ userInfo: userInfoResult[0], summary: summaryResult[0] });
+                });
+            });
+        });
+    }
+    
+    
+    
+    
+    
+
     
     static async addNewUser(name , password , email){
         return new Promise(resolve=>{

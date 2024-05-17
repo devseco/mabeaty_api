@@ -21,7 +21,9 @@ class ProductController {
         res.send(result)
     }
     static async GetProductRecently(req , res , next){
-        const result = await Product.getProductsRecently();
+        const page = parseInt(req.params.page) || 1;
+        const limit = parseInt(req.params.limit) || 10; // عدد العناصر لكل صفحة
+        const result = await Product.getProductsRecently(page,limit);
         if(result)
         res.send(result)
     }

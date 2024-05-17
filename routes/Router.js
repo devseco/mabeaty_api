@@ -10,12 +10,13 @@ const auth = require('../middleware/auth');
 router.get('/allusers',auth.authenticateToken,Usercontroller.getAllUsers);
 router.post('/addnew',Usercontroller.addnewuser);
 router.post('/login',Usercontroller.login);
+router.get('/userInfo/:id',Usercontroller.getUserInfo);
 //Products
 router.get('/getProducts',ProductController.GetAllProducts);
 router.get('/getProduct/:id',ProductController.GetProduct);
 router.get('/filterProducts/:title',ProductController.FilterProducts);
 router.get('/getProductByCategory/:id',ProductController.GetProductByCategory);
-router.get('/getProductsRecently',ProductController.GetProductRecently);
+router.get('/getProductsRecently/:page/:limit',ProductController.GetProductRecently);
 //Categories
 router.get('/getCategories',Categorycontroller.GetAllCategories);
 router.get('/getCategory/:id',Categorycontroller.GetCategory);
