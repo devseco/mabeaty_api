@@ -27,5 +27,12 @@ class ProductController {
         if(result)
         res.send(result)
     }
+    static async GetProductFilter(req , res , next){
+        const page = parseInt(req.params.page) || 1;
+        const limit = parseInt(req.params.limit) || 10; // عدد العناصر لكل صفحة
+        const result = await Product.getTopSellingProducts(page,limit);
+        if(result)
+        res.send(result)
+    }
 }
 module.exports = ProductController;

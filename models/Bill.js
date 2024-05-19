@@ -68,7 +68,7 @@ class Bill{
     
     static async addBill(name, phone, city, address, price, delivery, items , user_id ,customer_name , customer_total ,customer_nearpoint  , profit , note) {
         return new Promise((resolve, reject) => {
-            mysql.query('INSERT INTO bills (name, phone, city, address, price, delivery, status , user_id ,customer_name , customer_total , customer_nearpoint , profit , pay , note) VALUES (?, ?, ?, ?, ?, ?, 1 , ? , ? , ? ,? , ? , 0 , ?)', [name, phone, city, address, price, delivery , user_id , customer_name , customer_total , customer_nearpoint , profit , note], (error, result) => {
+            mysql.query('INSERT INTO bills (name, phone, city, address, price, delivery, status , user_id ,customer_name , customer_total , customer_nearpoint , profit , pay , note , request) VALUES (?, ?, ?, ?, ?, ?, 1 , ? , ? , ? ,? , ? , 0 , ? , 0)', [name, phone, city, address, price, delivery , user_id , customer_name , customer_total , customer_nearpoint , profit , note], (error, result) => {
                 if (error) {
                     console.error("Error executing MySQL query:", error);
                     reject(error);

@@ -10,6 +10,25 @@ class Product {
             });
         })
     }
+    static async getTopSellingProducts(page, limit) {
+      return new Promise(resolve => {
+        const offset = (page - 1) * limit;
+        mysql.query(`
+          SELECT p.*, COUNT(s.item_id) AS total_sales
+          FROM products p
+          JOIN sales s ON p.id = s.item_id
+          GROUP BY p.id
+          ORDER BY total_sales DESC
+          LIMIT ?, ?`, [offset, limit], (error, results) => {
+          if (!error) {
+            resolve(results);
+          } else {
+            // handle error
+          }
+        });
+      });
+    }
+    
     static async getProductsRecently(page, limit) {
         return new Promise(resolve => {
           const offset = (page - 1) * limit;
@@ -22,7 +41,6 @@ class Product {
           });
         });
       }
-
       static searchProduct(title) {
         return new Promise((resolve, reject) => {
           const query = 'SELECT * FROM products WHERE title LIKE ? ORDER BY id DESC';

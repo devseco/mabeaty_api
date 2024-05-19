@@ -1,5 +1,6 @@
 const Billcontroller = require('../controllers/Billcontroller');
 const Categorycontroller = require('../controllers/Categorycontroller');
+const OrderController = require('../controllers/OrderController');
 const ProductController = require('../controllers/Productcontroller');
 const SliderController = require('../controllers/Slidercontroller');
 const Usercontroller = require('../controllers/Usercontroller');
@@ -17,6 +18,7 @@ router.get('/getProduct/:id',ProductController.GetProduct);
 router.get('/filterProducts/:title',ProductController.FilterProducts);
 router.get('/getProductByCategory/:id',ProductController.GetProductByCategory);
 router.get('/getProductsRecently/:page/:limit',ProductController.GetProductRecently);
+router.get('/getProductsFilters/:page/:limit',ProductController.GetProductFilter);
 //Categories
 router.get('/getCategories',Categorycontroller.GetAllCategories);
 router.get('/getCategory/:id',Categorycontroller.GetCategory);
@@ -28,5 +30,10 @@ router.get('/getBill/:id',Billcontroller.getBill);
 router.get('/getBills/:id',Billcontroller.getBillsByid);
 router.post('/addBill',Billcontroller.addBill);
 router.get('/getSales/:id',Billcontroller.getSalesById);
+//Orders
+router.get('/getOrder/:id',OrderController.getOrder);
+router.post('/addOrder',OrderController.addOrder);
+router.get('/getAllOrders',OrderController.getAllOrder);
 // Exprot
+
 module.exports = router;

@@ -43,7 +43,7 @@ class UserModel{
             // استعلام لحساب مجموع الحالات من جدول bills
             const summaryQuery = `
             SELECT
-            COALESCE((SELECT SUM(profit) FROM bills WHERE user_id = ? AND status = 4 AND pay = 0), 0) AS total_loss,
+            COALESCE((SELECT SUM(profit) FROM bills WHERE user_id = ? AND status = 4 AND pay = 0 AND request = 0), 0) AS total_loss,
             COALESCE((SELECT SUM(profit) FROM bills WHERE user_id = ? AND status = 4 AND pay = 1), 0) AS total_received_profit,
             COALESCE((SELECT SUM(profit) FROM bills WHERE user_id = ? AND status = 5 AND pay = 0), 0) AS total_returned_orders,
             COALESCE((SELECT SUM(profit) FROM bills WHERE user_id = ? AND status NOT IN (4, 5) AND pay = 0), 0) AS total_expected_profit`;
