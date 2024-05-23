@@ -10,5 +10,14 @@ class Categorycontroller{
         if(result)
         res.send(result)
     }
+    static async addCategory(req,res,next , imageUrl , title){
+        try{
+        const result = await Category.addCategory(title , imageUrl);
+        if(result)
+        res.send(result)
+        }catch(error){
+            console.log(error)
+        }
+    }
 }
 module.exports = Categorycontroller;

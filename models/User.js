@@ -63,22 +63,46 @@ class UserModel{
             });
         });
     }
-    
-    
-    
-    
-    
-
-    
-    static async addNewUser(name , password , email){
-        return new Promise(resolve=>{
-            mysql.query('insert into users (name,password,email) values(?,?,?)' , [name,password,email],(error,r)=>{
-                if(!error)
-                resolve(true)
-                else
-                resolve(false)
+    static async addNewUser(name, password, phone, city, address) {
+        return new Promise((resolve, reject) => {
+            // أولاً، تحقق من أن رقم الهاتف غير مستخدم
+            mysql.query('SELECT * FROM users WHERE phone = ?', [phone], async (error, results) => {
+                if (error) {
+                    return reject(error);
+                }
+                if (results.length > 0) {
+                    // إذا تم العثور على رقم الهاتف، أرجع رسالة خطأ
+                    return resolve({
+                        "message": "Phone number already in use",
+                        "status_code": 409
+                    });
+                } else {
+                    // إذا لم يتم العثور على رقم الهاتف، أكمل إضافة المستخدم
+                    mysql.query('INSERT INTO users (name, password, phone, city, address, active, email) VALUES (?, ?, ?, ?, ?, 1, 0)', [name, password, phone, city, address], (error, results) => {
+                        if (!error) {
+                            let userId = results.insertId;
+                            mysql.query('SELECT * FROM users WHERE id = ?', [userId], (error, results) => {
+                                if (!error && results.length > 0) {
+                                    resolve({
+                                        "message": "Successfully",
+                                        "status_code": 200,
+                                        "user_id": results[0]['id'],
+                                        'access_token': auth_new.generateAccessToken({ "id": results[0]['id'] }),
+                                        'username': results[0]['name'],
+                                        'phone': results[0]['phone']
+                                    });
+                                } else {
+                                    reject("Error fetching user data");
+                                }
+                            });
+                        } else {
+                            reject(error);
+                        }
+                    });
+                }
             });
-        })
+        });
     }
+    
 }
 module.exports = UserModel;

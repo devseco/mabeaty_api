@@ -34,5 +34,21 @@ class ProductController {
         if(result)
         res.send(result)
     }
+    static async addProduct(req,res,next , imageUrl , secondaryImagesUrls){
+        try{
+            const title = req.body.title;
+            const price = req.body.price;
+            const description = req.body.description;
+            const category = req.body.category;
+            const count = req.body.count;
+            const renewable = req.body.renewable;
+        const result = await Product.addProduct(title,price,description,imageUrl,category,count,renewable , secondaryImagesUrls);
+        if(result)
+        res.send(result)
+        }catch(error){
+            console.log(error)
+        }
+    }
+    
 }
 module.exports = ProductController;

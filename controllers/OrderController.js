@@ -26,7 +26,6 @@ class OrderController {
     }
     static async getAllOrder(req, res, next) {
         try {
-            const billId = req.params.id;
             const result = await Order.getAllOrder();
             if (result.length > 0) {
                 res.status(200).json(result);

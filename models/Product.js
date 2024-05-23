@@ -1,6 +1,33 @@
 const mysql = require('../config/db')
 class Product {
 
+
+  static async addProduct(title, price, description, primaryImageUrl, category, count, renewable, secondaryImagesUrls) {
+    return new Promise((resolve, reject) => {
+      // إدراج المنتج في جدول products
+      const productQuery = 'INSERT INTO products (title, price, description, image, category, lastprice, count, renewable) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+      mysql.query(productQuery, [title, price, description, primaryImageUrl, category, 0, count, renewable], (error, productResult) => {
+        if (error) {
+          return resolve(error);
+        }
+        // الحصول على ID المنتج المضاف
+        const productId = productResult.insertId;
+  
+        // إدراج الصور الثانوية في جدول images
+        const imagesQuery = 'INSERT INTO images (item_id, image) VALUES ?';
+        const imagesData = secondaryImagesUrls.map(url => [productId, url]);
+        mysql.query(imagesQuery, [imagesData], (imagesError) => {
+          if (imagesError) {
+            return resolve(imagesError);
+          }
+          resolve('Product and images added successfully');
+        });
+      });
+    });
+  }
+  
+  
+
     static async getProducts(){
         return new Promise(resolve=>{
             mysql.query('select * from products', [], (error , result)=>{
@@ -61,15 +88,46 @@ class Product {
         });
       }      
 
-    static async getProduct(id){
-        return new Promise(resolve=>{
-            mysql.query('select * from products where id = ?' , [id], (error , result)=>{
-                if(!error){
-                    resolve(result);
+      static async getProduct(id) {
+        return new Promise((resolve, reject) => {
+            mysql.query('SELECT * FROM products WHERE id = ?', [id], (error, productResult) => {
+                if (error) {
+                    return reject(error);
                 }
+    
+                if (productResult.length === 0) {
+                    return resolve(null); // or reject with an error if preferred
+                }
+    
+                const product = productResult[0];
+    
+                mysql.query('SELECT image FROM images WHERE item_id = ?', [id], (imgError, imgResult) => {
+                    if (imgError) {
+                        return reject(imgError);
+                    }
+    
+                    const images = imgResult.map(image => image.image);
+    
+                    const productWithImages = {
+                        id: product.id,
+                        title: product.title,
+                        price: product.price,
+                        description: product.description,
+                        image: product.image,
+                        category: product.category,
+                        lastprice: product.lastprice,
+                        count: product.count,
+                        renewable: product.renewable,
+                        images: images
+                    };
+    
+                    resolve(productWithImages);
+                });
             });
-        })
+        });
     }
+    
+    
     static async getProductByCategory(id){
         return new Promise(resolve=>{
             mysql.query('select * from products where category = ?' , [id], (error , result)=>{

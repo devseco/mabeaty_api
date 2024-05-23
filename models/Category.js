@@ -18,5 +18,17 @@ class Category {
             });
         })
     }
+    static async addCategory(title, image) {
+        return new Promise((resolve) => {
+            const query = 'INSERT INTO categories (title, image , active) VALUES (?, ? , 1)';
+            mysql.query(query, [title, image], (error, result) => {
+                if (!error) {
+                    resolve('add Successfully');
+                }else{
+                    resolve(error);
+                }
+            });
+        });
+    }
 }
 module.exports = Category;

@@ -65,7 +65,6 @@ class Bill{
             });
         });
     }
-    
     static async addBill(name, phone, city, address, price, delivery, items , user_id ,customer_name , customer_total ,customer_nearpoint  , profit , note) {
         return new Promise((resolve, reject) => {
             mysql.query('INSERT INTO bills (name, phone, city, address, price, delivery, status , user_id ,customer_name , customer_total , customer_nearpoint , profit , pay , note , request) VALUES (?, ?, ?, ?, ?, ?, 1 , ? , ? , ? ,? , ? , 0 , ? , 0)', [name, phone, city, address, price, delivery , user_id , customer_name , customer_total , customer_nearpoint , profit , note], (error, result) => {
@@ -87,9 +86,28 @@ class Bill{
             });
         });
     }
-    
-
-
-
+    static async getAllBill() {
+        return new Promise(resolve => {
+            mysql.query('SELECT  * FROM bills ORDER BY id DESC', [], (error, result) => {
+                if (!error) {
+                    resolve(result);
+                } else {
+                    resolve(error);
+                }
+            });
+        });
+    }
+    static async changeStatusBill(status, billId) {
+        return new Promise((resolve, reject) => {
+          mysql.query('UPDATE bills SET status = ? WHERE id = ?', [status, billId], (error, result) => {
+            if (!error) {
+              resolve('تم تغيير الحالة بنجاح');
+            } else {
+              reject(error);
+            }
+          });
+        });
+      }
+      
 }
 module.exports = Bill;

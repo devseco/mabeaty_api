@@ -1,5 +1,14 @@
 const UserModel = require('../models/User');
 const Usermodel = require('../models/User');
+const Joi = require('joi');
+
+const schema = Joi.object({
+    name: Joi.string().required(),
+    password: Joi.string().min(6).required(),
+    phone: Joi.string().pattern(new RegExp('^[0-9]{11}$')).required(),
+    city: Joi.string().required(),
+    address: Joi.string().required(),
+});
 
 class UserController {
     static async getAllUsers(req,res,next){
@@ -8,14 +17,19 @@ class UserController {
         res.send(results);
     }
     static async addnewuser(req,res,next){
-        var name = req.body.name;
+        const { error, value } = schema.validate(req.body);
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        } else{
+            var name = req.body.name;
         var password = req.body.password;
-        var email = req.body.email;
-        const results = await Usermodel.addNewUser(name,password,email);
-        if(results)
-        res.send('Add Users Success')
-        else
-        res.send('Add user Failed')
+        var phone  = req.body.phone;
+        var city = req.body.city;
+        var address = req.body.address;
+        const results = await Usermodel.addNewUser(name,password,phone , city , address);
+        res.send(results)
+        }
+        
     }
     static async getUserInfo(req, res, next) {
         try {

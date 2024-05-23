@@ -25,7 +25,7 @@ class Order{
     }
     static async addOrder(name, phone, total, payment_type, payment_number, payment_name) {
         return new Promise((resolve, reject) => {
-            mysql.query('INSERT INTO orders (name, phone, total, payment_type, payment_number, payment_name) VALUES (?, ?, ?, ?, ?, ?)', 
+            mysql.query('INSERT INTO orders (name, phone, total, payment_type, payment_number, payment_name , status) VALUES (?, ?, ?, ?, ?, ? , 0)', 
             [name, phone, total, payment_type, payment_number, payment_name], 
             (error, result) => {
                 if (!error) {
