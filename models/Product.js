@@ -94,38 +94,34 @@ class Product {
                 if (error) {
                     return reject(error);
                 }
-    
                 if (productResult.length === 0) {
                     return resolve(null); // or reject with an error if preferred
                 }
-    
                 const product = productResult[0];
-    
                 mysql.query('SELECT image FROM images WHERE item_id = ?', [id], (imgError, imgResult) => {
                     if (imgError) {
                         return reject(imgError);
                     }
-    
-                    const images = imgResult.map(image => image.image);
-    
+                    // Add the main product image to the images array
+                    const images = [product.image, ...imgResult.map(image => image.image)];
                     const productWithImages = {
                         id: product.id,
                         title: product.title,
                         price: product.price,
-                        description: product.description,
                         image: product.image,
+                        description: product.description,
                         category: product.category,
                         lastprice: product.lastprice,
                         count: product.count,
                         renewable: product.renewable,
-                        images: images
+                        images: images // Now contains the main image and additional images
                     };
-    
                     resolve(productWithImages);
                 });
             });
         });
     }
+    
     
     
     static async getProductByCategory(id){
